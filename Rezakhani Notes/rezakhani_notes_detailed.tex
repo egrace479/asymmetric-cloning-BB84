@@ -1,0 +1,716 @@
+\documentclass[reqno]{amsart}
+ % reqno causes equations to be numbered on the right.
+%\setlength{\textheight}{43pc}
+%\setlength {\textwidth}{28pc}
+
+\usepackage{amssymb, latexsym, amsmath, amsfonts, amscd}
+\usepackage{lscape,color}
+\usepackage{fullpage}
+\usepackage{mathrsfs}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage{showlabels}
+\usepackage{appendix}
+\usepackage{mathtools}
+\usepackage{braket}
+
+% Theorem statements that will be italicized.
+% Adding a * after \newtheorem will make it so that these aren't numbered.
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+%\newtheorem{remark}{Remark}
+
+% Theorem statements that will not be italicized.
+%\theoremstyle{definition}\newtheorem*{definition}{Definition}
+%{\theoremstyle{definition}\newtheorem*{comment}{Comment}}
+{\theoremstyle{definition}\newtheorem{remark}{Remark}}
+{\theoremstyle{definition}\newtheorem{assumption}{Assumption}}
+{\theoremstyle{definition}\newtheorem{fact}{Fact}}
+%{\theoremstyle{definition}\newtheorem{example}{Example}}
+
+% This makes it so that the lemmas are numbered 1.1, 1.2, etc., depending on which
+% section they occur in.
+\numberwithin{lemma}{section}
+\numberwithin{proposition}{section}
+
+% Some special commands
+\newcommand{\dee}{\mathrm{d}}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\C}{\mathbf{C}}
+\newcommand{\T}{\mathbf{T}}
+\newcommand{\Z}{\mathbf{Z}}
+\newcommand{\N}{\mathbf{N}}
+\newcommand{\F}{\tilde{\mathscr{F}}}
+\newcommand{\G}{\tilde{\mathscr{G}}}
+\newcommand{\HH}{\tilde{\mathscr{H}}}
+\newcommand{\dist}{\textnormal{dist}}
+\newcommand{\sech}{\textnormal{sech}}
+\newcommand{\p}{\partial}
+\newcommand{\Qproj}{\mathscr{Q}}
+\newcommand{\Pproj}{\mathscr{P}}
+\newcommand{\supp}{\textnormal{supp }}
+\newcommand{\tw}{\tilde{w}}
+\newcommand{\tv}{\tilde{v}}
+\newcommand{\la}{\langle}
+\newcommand{\Span}{\textnormal{Span}}
+\newcommand{\out}{\textnormal{out}}
+\newcommand{\id}{\textnormal{id}}
+\newcommand{\tr}{\textnormal{tr}}
+
+\begin{document}
+\begin{center}
+\textbf{Notes on ``Separability in asymmetric phase-covariant cloning''}\\
+\textbf{(by Rezakhani, Siadatnejad, and Ghaderi)}
+\end{center}
+
+These notes provide detailed calculations pertaining to the paper of Rezakhani, Siadatnejad, and Ghaderi \cite{REZAKHANI2005278}.
+
+\section{Universal Asymmetric Cloning Machine}
+
+The goal of this section is to develop an asymmetric cloning machine which is universal. In this context, 'universal' means that it treats all inputs in the same way. We will begin by setting up a symmetric universal cloning machine and reviewing some of its properties. Following this we will develop an asymmetric cloner and explore some of its properties.
+
+\subsection{The $d$-dimensional universal cloning machine of Buzek and Hillery \cite{BuzekHillery1998}}
+
+Consider the unitary transformation
+\begin{equation}
+\label{universal}
+\ket{i}_{A} \ket{0}_{B} \ket{\Sigma}_{X} \mapsto \mu \ket{i}_{A} \ket{i}_{B} \ket{i}_{X} + \nu \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \Big ( \ket{i}_{A} \ket{j}_{B} + \ket{j}_{A} \ket{i}_{B} \Big ) \ket{j}_{X},
+\end{equation}
+where $A$ is the input qudit, $B$ is the blank qudit, and $X$ is an ancilla which is initially in a fixed state, $\ket{\Sigma}$. ({\color{red}{RSG comment that the ancilla can be regarded as the cloning machine; I would like to understand this comment.}}) The set $\{\ket{i}_{A}\}_{i=0}^{d-1}$ is a set of orthonormal basis vectors for the Hilbert space of the input, $\mathcal{H}_{A}$. We make similar definitions for the Hilbert space of the ancilla $\mathcal{H}_{X}$. 
+
+\smallskip
+
+\begin{fact}
+We can, without loss of generality, take the parameters $\mu, \nu$ to be real numbers.
+\end{fact}
+
+We require the following conditions of the mapping \eqref{universal}:
+\begin{enumerate}
+\item the mapping is unitary;
+\item the mapping is \emph{universal}, meaning that the quality of the clones does not depennd on the input state (measured in terms of the the fidelity $F = \bra{\psi} \rho^{(\out)} \ket{\psi}$);
+\item the outputs are symmetric, i.e., $\rho_{A}^{(\out)} = \rho_{B}^{(\out)}$.
+\item {\color{red}{While this isn't required in the RSG paper, there are authors who require the mapping for the cloning transformation to be completely positive (in the operator-theoretic sense), see for instance \cite{keyl1999optimal} or, in the phase-covariant case, \cite{bruss2000phase}.}}
+\end{enumerate}
+
+\begin{remark}
+There is a fairly good set of definitions provided in the paper of Horodecki, Horodecki, and Horodecki \cite{HORODECKI19961} that has to do with all of the various notions of positivity for operators. If $\mathcal{A}_{i}$ is the algebra of operators on the Hilbert space $\mathcal{H}_{i}$ ($i = 1,2$), then $\mathcal{A}_{i}$ is a Hilbert space with inner product $\langle A,B \rangle = \tr (B^{\dagger}A)$. We denote by $\mathcal{L}(\mathcal{A}_{1}, \mathcal{A}_{2})$ the space of linear maps from $\mathcal{A}_{1}$ to $\mathcal{A}_{2}$. A map $\Lambda \in \mathcal{L}(\mathcal{A}_{1}, \mathcal{A}_{2})$ is \emph{positive} if it maps positive operators in $\mathcal{A}_{1}$ to positive operators in $\mathcal{A}_{2}$. We say that $\Lambda$ is a \emph{completely positive map} if the induced map
+\begin{equation*}
+\Lambda_{n} := \Lambda \otimes I: \mathcal{A}_{1} \otimes \mathcal{M}_{n} \to \mathcal{A}_{2} \otimes \mathcal{M}_{n}
+\end{equation*}
+is positive for all $n$. (Here $\mathcal{M}_{n}$ is the set of all complex $n \times n$ matrices and $I$ is the identity map.)
+\end{remark}
+
+\begin{lemma}
+\label{BXpartialtrace}
+$\displaystyle \tr_{BX} \Big ( \ket{ijk} \bra{pqr} \Big ) =
+\left \{
+\begin{array}{ll}
+\ket{i} \bra{p} & j = q \ \textnormal{and} \ k = r\\
+0 & \textnormal{otherwise.}
+\end{array}
+\right .$
+\end{lemma}
+
+\begin{proof}
+We recall that the partial trace (over $B$) of a composite system $AB$ is defined as follows (see \cite{nielsen_chuang}):
+\begin{equation*}
+\tr_{B}\Big ( \ket{a_{1}} \bra{a_{2}} \otimes \ket{b_{1}} \bra{b_{2}} \Big ) :=
+\ket{a_{1}} \bra{a_{2}} \tr \Big ( \ket{b_{1}} \bra{b_{2}} \Big ),
+\end{equation*}
+where $\ket{a_{1}}, \ket{a_{2}}$ are vectors in the state space of $A$ and $ket{b_{1}}, \ket{b_{2}}$ are vectors in the state space of $B$. We note that the trace functional appearing on the right side of this equation is the usual trace:
+\begin{equation*}
+\tr \Big ( \ket{b_{1}} \bra{b_{2}} \Big ) = \braket{b_{1} \vert b_{2}}.
+\end{equation*}
+
+In our case we have
+\begin{equation*}
+\tr_{BX} \Big ( \ket{ijk}\bra{pqr} \Big ) = \ket{i} \bra{p} \tr \Big ( \ket{jk} \bra{qr} \Big ).
+\end{equation*}
+Note that
+\begin{align*}
+\tr \Big ( \ket{jk}\bra{qr} \Big ) &= \tr \Big ( \ket{j} \bra{q} \Big ) \tr \Big ( \ket{k} \bra{r} \Big )\\
+&= \braket{j \vert q} \braket{k \vert r}\\
+&= \delta_{jq} \delta_{kr},
+\end{align*}
+where 
+\begin{equation*}
+\delta_{mn} = \left \{ \begin{array}{ll}
+1 & m = n\\
+0 & m \neq n.
+\end{array}
+\right .
+\end{equation*}
+\end{proof}
+
+\begin{lemma}
+\label{AXpartialtrace}
+$\displaystyle \tr_{AX} \Big ( \ket{ijk}\bra{pqr} \Big )
+= \left \{ \begin{array}{ll}
+\ket{j}\bra{q} & i = p \ \textnormal{and} \ k = r\\
+0 & \textnormal{otherwise}.
+\end{array}
+\right .
+$
+\end{lemma}
+
+\begin{proof}
+The proof of this result is almost identical to that of Lemma \ref{BXpartialtrace}.
+\end{proof}
+
+
+\begin{proposition}
+\label{UQCMidentities}
+In light of (1)-(3) we have the following identities:
+\begin{align}
+\rho_{A}^{(\out)} &= \eta \rho_{A}^{(\id)} + \frac{1 - \eta}{d} 1_{A} \label{universal_rhoA}\\
+\rho_{B}^{(\out)} &= \eta \rho_{B}^{(\id)} + \frac{1 - \eta}{d} 1_{B} \label{universal_rhoB}\\
+\mu^{2} = 2\mu \nu  &\qquad \mu^{2} = \frac{2}{d+1}  \qquad \nu^{2} = \frac{1}{2(d+1)} \label{mu_nu_d}\\
+\eta &= \mu^{2} + (d-2)\nu^{2} = \frac{d+2}{2(d+1)} \label{eta_universal_d}.
+\end{align}
+\end{proposition}
+
+\noindent{{\color{red}{I would like to know why the clone has to have the form in \eqref{universal_rhoA} and \eqref{universal_rhoB}.}}}
+
+\noindent{{\color{blue}{The reason for this is developed in \cite{bruss2000phase}, where complete positivity of the cloning transformation allows the authors to use the Kraus decomposition of the reduced density operator. There is also (allegedly) a proof contained in \cite{keyl1999optimal}.
+
+Alternatively, in \cite{BuzekHillery1998} it is claimed that the particular form of the output density operator minimizes the Bures distance:
+\begin{equation*}
+d(\rho_{1}, \rho_{2}) = \sqrt{2} \Big ( 1 - \tr \Big ( \sqrt{\rho_{1}^{1/2} \rho_{2} \rho_{1}^{1/2}} \Big ) \Big )^{1/2}
+\end{equation*}
+Unfortunately there is no argument acccompanying this claim.
+}}
+
+\begin{proof}
+The key component of this proof (and for some of the proofs that will come later in these notes) is the calculation of the density operator $\rho^{(\out)}$ and the subsequent calculation of the reduced density operators $\rho_{A}^{(\out)}$ and $\rho_{B}^{(\out)}$.
+
+We begin with an input of the form $\ket{\psi} = \sum_{i=0}^{d-1} \alpha_{i} \ket{i}$. Thanks to linearity we find that the output state of the operator defined by \eqref{universal} is 
+\begin{equation*}
+\sum_{i=0}^{d-1} \alpha_{i} \left ( \mu \ket{iii} + \nu \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \Big ( \ket{ijj} + \ket{jij} \Big ) \right )
+\end{equation*}
+(Note that we are now writing $\ket{ijk} = \ket{i}_{A} \ket{j}_{B} \ket{k}_{X}$ to simplify the notation.) The density operator of the output is
+\begin{align*}
+\rho^{(\out)} &= \left [ \sum_{i=0}^{d-1} \alpha_{i} \left ( \mu \ket{iii} + \nu \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \Big ( \ket{ikk} + \ket{kik} \Big ) \right ) \right ]\\
+&\qquad \left [ \sum_{j=0}^{d-1} \alpha_{j}^{*} \left ( \mu \bra{jjj} + \nu \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \Big ( \bra{jll} + \bra{ljl} \Big ) \right )\right ]\\
+&= \mu^{2} \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \ket{iii} \bra{jjj} \\
+& + \mu \nu \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \Big ( \ket{ikk} \bra{jjj} + \ket{kik} \bra{jjj} \Big )\\
+& + \mu \nu \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \Big ( \ket{iii} \bra{jll} + \ket{iii} \bra{ljl} \Big )\\
+& + \nu^{2} \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \Big ( \ket{ikk} \bra{jll} + \ket{ikk} \bra{ljl} + \ket{kik} \bra{jll} + \ket{kik} \bra{ljl} \Big )\\
+&=: \text{Term I} + \text{Term II} + \text{Term III} + \text{Term IV}.
+\end{align*}
+To compute the reduced density operators we consider the partial trace of Terms I-IV.
+
+\smallskip
+
+\noindent{\textbf{Calculation of $\rho_{A}^{(\out)}$.}}
+To calculate the reduced density operator we now calculate the partial trace over the $B$ and $X$ qudits:
+\begin{equation*}
+\rho_{A}^{(\out)} = \tr_{BX} \Big ( \rho^{(\out)} \Big ).
+\end{equation*}
+
+\smallskip
+
+\noindent{\textit{Term I.}}
+\begin{align*}
+\tr_{BX} \Big ( \text{Term I} \Big ) &= \mu^{2} \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \tr_{BX} \Big ( \ket{iii} \bra{jjj} \Big )\\
+&= \mu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i},
+\end{align*}
+where we've used the fact that
+\begin{equation*}
+\tr_{BX} \Big ( \ket{iii} \bra{jjj} \Big ) = \ket{i} \bra{i}
+\end{equation*}
+in the case where $i = j$ and is zero otherwise (this follows from Lemma \ref{BXpartialtrace}).
+
+\smallskip
+
+\noindent{\textit{Term II.}}
+\begin{align*}
+\tr_{BX} \Big ( \textnormal{Term II} \Big ) &=
+\mu \nu \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \tr_{BX} \Big ( \ket{ikk}\bra{jjj} \Big )\\
+& \quad + \mu \nu \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \tr_{BX} \Big ( \ket{kik}\bra{jjj} \Big )\\
+&=: \text{Term II}_{1} + \text{Term II}_{2}.
+\end{align*}
+
+In $\text{Term II}_{1}$ we note that we only obtain a nontrivial contribution to the sum if $j = k \neq i$, in which case we have $\tr_{BX} \Big ( \ket{ikk} \bra{jjj} \Big ) = \ket{i} \bra{j}$. Thus
+\begin{align*}
+\text{Term II}_{1} = \mu \nu \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i}\bra{j}.
+\end{align*}
+
+In $\text{Term II}_{2}$ we have a nontrivial contribution to the sum if $j = k$ and $j = i$. However, since $k \neq i$ in the internal most sum, we find that $\text{Term II}_{2} = 0.$
+
+In summary, then, we have
+\begin{equation*}
+\tr_{BX} \Big ( \text{Term II} \Big ) = \mu \nu \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i}\bra{j}.
+\end{equation*}
+
+\smallskip
+
+\noindent{\textit{Term III.}}
+\begin{align*}
+\tr_{BX} \Big ( \text{Term III} \Big ) & = 
+\mu \nu \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \tr_{BX} \Big ( \ket{iii}\bra{jll} \Big )\\
+& \quad + \mu \nu \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \tr_{BX} \Big ( \ket{iii}\bra{ljl} \Big )\\
+&=: \text{Term III}_{1} + \text{Term III}_{2}.
+\end{align*}
+
+Note that $\tr_{BX} \Big ( \ket{iii}\bra{jll} \Big ) = 0$ unless $i = l \neq j$. As in the case of $\text{Term II}_{1}$ above we find that
+\begin{equation*}
+\text{Term III}_{1} = \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i}\bra{j}.
+\end{equation*}
+(Here it helps to switch the order of summation and then to use symmetry in reordering the sum.)
+
+In order for the terms in $\text{Term III}_{2}$ to be nonzero we require that $i = l = j$. However, since the internal sum requires $l \neq j$ we find that $\text{Term III}_{2} = 0.$ 
+
+We thus find that
+\begin{equation*}
+\tr_{BX} \Big ( \text{Term III} \Big ) = \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i}\bra{j}.
+\end{equation*}
+
+\smallskip
+
+\noindent{\textit{Term IV.}}
+As we did in the cases of Term II and Term III, we decompose the partial trace of Term IV into four terms:
+\begin{equation*}
+\tr_{BX} \Big ( \text{Term IV} \Big ) = \text{Term IV}_{1} + \text{Term IV}_{2} + \text{Term IV}_{3} + \text{Term IV}_{4}, 
+\end{equation*}
+where
+\begin{align*}
+\text{Term IV}_{1} & = \nu^{2} \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ d \neq i}} \sum_{\substack{0 \leq l \leq \d-1\\ l \neq j}} \tr_{BX} \Big ( \ket{ikk}\bra{jll} \Big ), \\
+\text{Term IV}_{2} & = \nu^{2} \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ d \neq i}} \sum_{\substack{0 \leq l \leq \d-1\\ l \neq j}} \tr_{BX} \Big ( \ket{ikk}\bra{ljl} \Big ),\\
+\text{Term IV}_{3} & = \nu^{2} \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ d \neq i}} \sum_{\substack{0 \leq l \leq \d-1\\ l \neq j}} \tr_{BX} \Big ( \ket{kik}\bra{jll} \Big ),\\
+\text{Term IV}_{4} & = \nu^{2} \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ d \neq i}} \sum_{\substack{0 \leq l \leq \d-1\\ l \neq j}} \tr_{BX} \Big ( \ket{kik}\bra{ljl} \Big ).
+\end{align*}
+
+\smallskip
+
+\noindent{Calculation of $\text{Term IV}_{1}$.} In light of Lemma \ref{BXpartialtrace} we find that
+\begin{equation*}
+\tr_{BX} \Big ( \ket{ikk}\bra{jll} \Big ) = \left \{ \begin{array}{ll}
+\ket{i}\bra{j} & k = l\\
+0 & k \neq l.
+\end{array}
+\right .
+\end{equation*}
+It is helpful to further subdivide the resulting expression into the two cases in which $i = j$ and $i \neq j$.
+If $i =j$, then
+\begin{align*}
+\sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \tr_{BX} \Big ( \ket{ikk}\bra{jll} \Big ) 
+&= \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq i}} \tr_{BX} \Big ( \ket{ikk}\bra{ill} \Big )\\
+&= \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \ket{i}\bra{i}\\
+&= (d-1) \ket{i}\bra{i}.
+\end{align*}
+On the other hand, if $i \neq j$, then
+\begin{align*}
+\sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \tr_{BX} \Big ( \ket{ikk}\bra{jll} \Big )
+= \sum_{\substack{0 \leq k \leq d-1\\ k \neq i\\
+k \neq j}} \ket{i}\bra{j}
+= (d-2) \ket{i}\bra{j}
+\end{align*}
+Together this yields
+\begin{equation*}
+\text{Term IV}_{1} = (d-1) \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i}\bra{i} + (d-2) \nu^{2} \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i}\bra{j}
+\end{equation*}
+
+\smallskip
+
+\noindent{Calculation of $\text{Term IV}_{2}$.}
+Using Lemma \ref{BXpartialtrace}, we find that $\tr_{BX} \Big ( \ket{ikk}\bra{ljl} \Big ) = \ket{i}\bra{j}$ whenever $j = k = l$. However the sum over $l$ specifies the $l \neq j$, meaning that there are no nontrivial terms in this sum. We conclude that $\text{Term IV}_{2} = 0.$
+
+
+\smallskip
+
+\noindent{Calculation of $\text{Term IV}_{3}$.} As in our calculation of $\text{Term IV}_{2}$ we have that $tr_{BX} \Big ( \ket{kik}\bra{jll}\Big ) \neq 0$ provided $k = l = i$. However this forbidden in the sum over $k$ (we require $k \neq i$), whence $\text{Term IV}_{3} = 0$.
+
+\smallskip
+
+\noindent{Calculation of $\text{Term IV}_{4}$.}
+Using Lemma \ref{BXpartialtrace} here gives
+\begin{equation*}
+\tr_{BX} \Big ( \ket{kik} \bra{ljl} \Big ) = \left \{ \begin{array}{ll}
+\ket{k}\bra{l} & i=j \ \text{and} \ k=l\\
+0 & \text{otherwise}
+\end{array}
+\right .
+= \left \{ \begin{array}{ll}
+\ket{k}\bra{k} & i = j, k = l\\
+0 & \text{otherwise.}
+\end{array}
+\right .
+\end{equation*}
+It follows that
+\begin{align*}
+\text{Term IV}_{4} &= \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \ket{k} \bra{k}\\
+&= \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \Big ( 1_{A} - \ket{i}\bra{i} \Big )\\
+&= \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} 1_{A} - \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i}\\
+&= \nu^{2} 1_{A} - \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i}.
+\end{align*}
+Here we've used that $\sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} = 1$ along with the simplifying calculation
+\begin{equation*}
+\sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \ket{i}\bra{i} = 1_{A} - \ket{i}\bra{i},
+\end{equation*}
+where $1_{A}$ denotes the identity operator on the state space of $A$.
+
+To summarize, we have
+\begin{align*}
+\tr_{BX} \Big ( \text{Term IV} \Big ) &= (d-1) \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i} + (d-2) \nu^{2} \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i} \bra{j} + \nu^{2} 1_{A} - \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i}\\
+&= (d-2) \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i} + (d-2) \nu^{2} \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i} \bra{j} + \nu^{2} 1_{A}\\
+&= (d-2) \nu^{2} \ket{\psi} \bra{\psi} + \nu^{2} 1_{A}.
+\end{align*}
+
+\smallskip
+
+Putting these calculations together, we find that
+\begin{align*}
+\rho_{A}^{(\out)} &= \mu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i} + 2\mu \nu \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i} \bra{j} + (d-2) \nu^{2} \ket{\psi} \bra{\psi} + \nu^{2} 1_{A}\\
+&= \Big ( \mu^{2} + (d-2) \nu^{2} \Big ) \ket{\psi}\bra{\psi} + \nu^{2} 1_{A},
+\end{align*}
+where we require that $\mu^{2} = 2\mu \nu$. Here we are using the fact that the reduced density operator has the form \eqref{universal_rhoA} to identify $\mu^{2}$ and $2 \mu \nu$. Our calculation reveals that $\eta = \mu^{2} + (d-2) \nu^{2}$, as in \eqref{eta_universal_d}.
+
+To see that we now have the remaining identities in \eqref{mu_nu_d}, note that the requirement that the cloning map \eqref{universal} be unitary implies that
+\begin{equation}
+\label{universal_normalization}
+\mu^{2} + 2(d-1) \nu^{2} = 1.
+\end{equation}
+From $\mu^{2} = 2\mu \nu$ we see that $\mu = 0$ or $\mu = 2\nu$.
+If $\mu = 2\nu$, then \eqref{universal_normalization} reads
+\begin{equation*}
+4 \nu^{2} + 2(d-1) \nu^{2} = 1
+\end{equation*}
+which yields $\nu^{2} = 1/2(d+1)$. Returning this to \eqref{universal_normalization} and solving for $\mu^{2}$ yields the final identity of \eqref{mu_nu_d}.
+
+\noindent{{\color{red}{Why are we forbidden from taking $\mu = 0$?}}}
+
+\smallskip
+
+\noindent{\textbf{Calculation of $\rho_{B}^{(\out)}$.}}
+The calculation of the reduced density operator $\rho_{B}^{(\out)}$ closesly follows the corresponding calculation for $\rho_{A}^{(\out)}$ but relies on Lemma \ref{AXpartialtrace}. We summarize the calculations below:
+\begin{align*}
+\tr_{AX}(\text{Term I}) &= \mu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i}\\
+\tr_{AX}(\text{Term II}) &= \mu \nu \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i}\bra{j}\\
+\tr_{AX} (\text{Term III}) &= \mu \nu \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i} \bra{j}\\
+\tr_{AX}(\text{Term IV}) &= \nu^{2} 1_{B} - \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i}\bra{i} + (d-1) \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i}\bra{i} + (d-2) \nu^{2} \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i} \bra{j}\\
+&= (d-2) \nu^{2} \ket{\psi}\bra{\psi} + \nu^{2} 1_{B}.
+\end{align*}
+We conclude that $\rho_{B}^{(\out)} = \rho_{A}^{(\out)}$ automatically.
+
+\noindent{{\color{red}{Why do RSG insist on this condition? It seems it's automatic once one has the form \eqref{universal}.}}}
+
+\noindent{{\color{blue}{Some clarification is provided in \cite{BuzekHillery1998} on this point. They have a nicer way of explaining exactly what we require of a UQCM.}}}
+\end{proof}
+
+\noindent{\textbf{Note.}} For ease of reference we have included the main calculations in a table at the end of these notes.
+
+\begin{remark}
+Using the same techniques as those used in the proof of Proposition \ref{UQCMidentities} we can also calculate the reduced operator for the ancilla.
+\begin{align*}
+\rho_{X}^{(\out)} &= \tr_{AB}(\rho^{(\out)})\\
+&= \tr_{AB}(\text{Term I}) + \tr_{AB}(\text{Term II}) + \tr_{AB}(\text{Term III}) + \tr_{AB}(\text{Term IV}),
+\end{align*}
+where Term I through Term IV are as above. In the case of the ancilla we find that
+\begin{align*}
+\tr_{AB}(\text{Term I}) = \mu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i}.
+\end{align*}
+Interestingly, we find that
+\begin{equation*}
+\tr_{AB}(\text{Term II}) = 0,
+\end{equation*}
+since we encounter terms of the form 
+\begin{equation*}
+\tr_{AB}( \ket{ikk} \bra{jjj}) \qquad \text{and} \qquad \tr_{AB}( \ket{kik}\bra{jjj}).
+\end{equation*}
+In each of these cases the partial trace is zero unless $i = j = k$. However, the internal sum is only taken over $k \neq i$, meaning that the partial trace is, in this case, trivial. Similarly, we find that
+\begin{equation*}
+\tr_{AB}(\text{Term III}) = 0.
+\end{equation*}
+
+Term IV is, as always, more complicated. We consider four cases, corresponding to the four terms in the sum for Term IV:
+\begin{align*}
+\text{Term IV}_{1} &= \nu^{2}\sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \tr_{AB}(\ket{ikk}\bra{jll})\\
+\text{Term IV}_{2} &=\nu^{2} \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \tr_{AB}(\ket{ikk}\bra{ljl})\\
+\text{Term IV}_{3} &=\nu^{2} \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \tr_{AB}(\ket{kik} \bra{jll})\\
+\text{Term IV}_{4} &=\nu^{2} \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \tr_{AB}(\ket{kik}\bra{ljl}).
+\end{align*}
+For $\text{Term IV}_{1}$ we find that the partial trace is zero unless $i = j$ and $k = l$. Thus
+\begin{align*}
+\text{Term IV}_{1} &= \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \ket{k}\bra{k}\\
+&= \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \Big ( 1 - \ket{i} \bra{i} \Big )\\
+&= \nu^{2} 1 - \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i}\bra{i}.
+\end{align*}
+For $\text{Term IV}_{2}$ we have
+\begin{equation*}
+\tr_{AB}(\ket{ikk}\bra{ljl}) = \left \{ \begin{array}{ll}
+\ket{j}\bra{i} & \text{if} \ i = l \ \text{and} \ j = k\\
+0 & \text{otherwise}.
+\end{array} 
+\right .
+\end{equation*}
+This means that
+\begin{equation*}
+\text{Term IV}_{2} = \nu^{2} \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{j}\bra{i}.
+\end{equation*}
+$\text{Term IV}_{3}$ is similar to $\text{Term IV}_{2}$ and also works out to be
+\begin{equation*}
+\text{Term IV}_{3} = \nu^{2} \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{j}\bra{i}.
+\end{equation*}
+Finally, $\text{Term IV}_{4}$ is similar to $\text{Term IV}_{1}$ and is given by
+\begin{equation*}
+\text{Term IV}_{4} = \nu^{2} 1 - \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i}\bra{i}.
+\end{equation*}
+
+Altogether this yields
+\begin{equation*}
+\rho_{X}^{(\out)} = (\mu^{2} - 2\nu^{2}) \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i} + 2 \nu^{2} \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{j} \bra{i} + 2 \nu^{2} 1.
+\end{equation*}
+
+\noindent{{\color{red}{There is a formula for the output in the ancilla given in Buzek and Hillery \cite{BuzekHillery1998} which seems to be different. It may be that they have simplified their calculation somewhat using the identities developed in the proposition. Or it could just be that there is an error in the calculation that is developed in these notes.}}}
+
+
+We note that
+\begin{equation*}
+\left ( \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{j}\bra{i} \right ) = \left ( \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i}\bra{j} \right )^{\dagger}, 
+\end{equation*}
+meaning that we have an adjoint term involved.
+\end{remark}
+
+\subsection{Asymmetric Cloning Machine}
+In tracing through the calculations for the universal cloning machine given in \eqref{universal} we observe that the symmetry $\rho_{A}^{(\out)} = \rho_{B}^{(\out)}$ is a result of the symmetry in the summation in \eqref{universal}. That is, the symmetry results from the fact that terms of the form
+\begin{equation*}
+\ket{i}_{A} \ket{j}_{B} \ket{j}_{X} \qquad \text{and} \qquad 
+\ket{j}_{A} \ket{i}_{B} \ket{j}_{X}
+\end{equation*}
+are equally weighted by the coefficient $\nu$. To break this symmetry, then, it is reasonable to allow for different coefficients on these two terms. With that in mind, we consider a unitary transformation defined by
+\begin{equation}
+\label{universal_asymmetric}
+\ket{i}_{A} \ket{0}_{B} \ket{\Sigma}_{X} \mapsto \mu \ket{i}_{A} \ket{i}_{B} \ket{i}_{X} + \nu \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \ket{i}_{A} \ket{j}_{B} \ket{j}_{X} + \xi \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \ket{j}_{A} \ket{i}_{B} \ket{j}_{X}.
+\end{equation}
+
+\begin{proposition}
+\label{asym_density_ops}
+Suppose that the initial state we wish to clone is given by $\ket{\psi} = \sum_{i=0}^{d-1} \alpha_{i} \ket{i}$. The reduced density operators associated with the transformation \eqref{universal_asymmetric} are given by
+\begin{equation*}
+\rho_{A}^{(\out)} = \Big ( (d-2)\nu^{2} + 2\mu \nu \Big ) \ket{\psi}  \bra{\psi} + \xi^{2} 1 + \Big ( \mu^{2} + \nu^{2} - 2\mu \nu - \xi^{2} \Big ) \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i},
+\end{equation*}
+and
+\begin{equation*}
+\rho_{B}^{(\out)} = \Big ( (d-2)\xi^{2} + 2\mu \xi \Big ) \ket{\psi}  \bra{\psi} + \nu^{2} 1 + \Big ( \mu^{2} + \xi^{2} - 2\mu \xi - \nu^{2} \Big ) \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i}.
+\end{equation*}
+\end{proposition}
+
+\begin{proof}
+The reduced density operators that are the conclusion of Proposition \ref{asym_density_ops} are computed as the partial traces of the density operator
+\begin{align*}
+\rho^{(\out)} &= \mu^{2} \sum_{i=0}^{d-1} \sum_{j=0}^{d-1}  \alpha_{i} \alpha_{j}^{*} \ket{iii} \bra{jjj} + \mu \nu \sum_{i=0}^{d-1} \sum_{j=0}^{d-1}  \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \ket{iii} \bra{jll}\\
+& \quad + \mu \xi \sum_{i=0}^{d-1} \sum_{j=0}^{d-1}  \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \ket{iii} \bra{ljl}
+ + \mu \nu \sum_{i=0}^{d-1} \sum_{j=0}^{d-1}  \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \ket{ikk} \bra{jjj} \\
+& \quad  + \nu^{2} \sum_{i=0}^{d-1} \sum_{j=0}^{d-1}  \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \ket{ikk} \bra{jll}
++ \nu \xi \sum_{i=0}^{d-1} \sum_{j=0}^{d-1}  \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \ket{ikk} \bra{ljl}\\
+& \quad + \mu \xi \sum_{i=0}^{d-1} \sum_{j=0}^{d-1}  \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \ket{kik} \bra{jjj} 
++ \nu \xi \sum_{i=0}^{d-1} \sum_{j=0}^{d-1}  \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \ket{kik} \bra{jll}\\
+& \quad + \xi^{2} \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \ket{kik} \bra{ljl} 
+\end{align*}
+
+We now compute $\rho_{A}^{(\out)} = \tr_{BX}(\rho^{(\out)})$. The calculations involved are the same as those that were used in the proof of Proposition \ref{UQCMidentities}. For convenience we have collected those calculations into a table located on the last page of these notes. We find that
+\begin{align*}
+\rho_{A}^{(\out)} &= \tr_{BX}(\rho^{(\out)})\\
+&= \mu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i} + 2\mu \nu \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i} \bra{j}\\
+& \quad + (d-1) \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i} + (d-2) \nu^{2} \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i} \bra{j}\\
+& \quad + \xi^{2} 1 - \xi^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i}.
+\end{align*}
+We use the identity
+\begin{equation*}
+\sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i}\bra{j} = \ket{\psi} \bra{\psi} - \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i},
+\end{equation*}
+which is obtained by calculating $\ket{\psi} \bra{\psi}$ and separating the resulting sum into diagonal terms and off-diagonal terms. This identity enables us to simplify our calculation, yielding
+\begin{align*}
+\rho_{A}^{(\out)} &= \mu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i} + 2\mu \nu \ket{\psi} \bra{\psi} - 2 \mu \nu \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i}\\
+&\quad + (d-2) \nu^{2} \ket{\psi} \bra{\psi} + \nu^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i} + \xi^{2} 1 - \xi^{2} \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i}\\
+&= \Big ( (d-2) \nu^{2} + 2 \mu \nu \Big ) \ket{\psi} \bra{\psi} + \xi^{2} 1 + \Big ( \mu^{2} + \nu^{2} - 2 \mu \nu - \xi^{2} \Big ) \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i}.
+\end{align*}
+An analogous calculation yields the result for $\rho_{B}^{(\out)} = \tr_{AX}(\rho^{(\out)}).$
+\end{proof}
+
+As a result of Proposition \ref{asym_density_ops} we have the following identities:
+\begin{align*}
+\eta_{A} = (d-2) \nu^{2} + 2 \mu \nu, &\qquad \mu^{2} + \nu^{2} - 2\mu \nu - \xi^{2} = 0,\\
+\eta_{B} = (d-2) \xi^{2} + 2 \mu \xi, &\qquad \mu^{2} + \xi^{2} - 2\mu \xi - \nu^{2} = 0.
+\end{align*}
+These inequalities follow from the calculations in Proposition \ref{asym_density_ops} together with the form of the density operators specificed in \eqref{universal_rhoA}, \eqref{universal_rhoB}. We note that the sum that occurs in our formulas for $\rho_{A}^{(\out)}$ and $\rho_{B}^{(\out)}$ is state-dependent, so its coefficient must be zero. 
+
+The fidelities for these clones are given by
+\begin{equation*}
+F_{A} = (d-2) \nu^{2} + 2 \mu \nu + \xi^{2} \qquad \text{and} \qquad
+F_{B} = (d-2) \xi^{2} + 2 \mu \xi + \nu^{2}.
+\end{equation*}
+
+\section{Phase-Covariant Cloning}
+
+In this section we introduce a cloning machine of the form \eqref{universal_asymmetric} which acts on a restricted class of qudits, namely those that lie in the equatorial plane:
+\begin{equation}
+\ket{\psi} = \frac{1}{\sqrt{d}} \sum_{k=0}^{d-1} e^{i\phi_{k}} \ket{k},
+\end{equation}
+where $\phi_{k} \in [0, 2\pi)$ for each $k \in \{0,\ldots, d-1\}$.
+Notice that in this case we have $ \alpha_{k} = e^{i\phi_{k}}/\sqrt{d}$, whence $\vert \alpha_{k} \vert^{2} = 1/d$ for each $k \in \{ 0,\ldots,d-1 \}$. Returning to the calculations from Proposition \ref{asym_density_ops} we find that the sum in the last term is
+\begin{equation*}
+\sum_{k=0}^{d-1} \vert \alpha_{k} \vert^{2} \ket{k} \bra{k} = \frac{1}{d} \sum_{k=0}^{d-1} \ket{k}\bra{k} = \frac{1}{d} 1.
+\end{equation*}
+In particular, we observe that the density operator is no longer state dependent. Indeed,
+\begin{align*}
+\rho_{A}^{(\out)} &= \Big ( (d-2) \nu^{2} + 2 \mu \nu \Big ) \ket{\psi}\bra{\psi} + \left ( \xi^{2} + \frac{\mu^{2} + \nu^{2} - 2\mu \nu - \xi^{2}}{d} \right )1,  \\
+\intertext{and}
+\rho_{B}^{(\out)} &= \Big ( (d-2) \xi^{2} + 2 \mu \xi \Big ) \ket{\psi}\bra{\psi} + \left ( \nu^{2} + \frac{\mu^{2} + \xi^{2} - 2\mu \xi - \nu^{2}}{d} \right )1.
+\end{align*}
+This means that the fidelity of the clones satisfy
+\begin{equation*}
+F_{A} = \frac{1 + (d-1)\Big ( (d-2) \xi^{2} + 2 \mu \xi \Big )}{d} \qquad \text{and} \qquad F_{B} = \frac{ 1 + (d-1)\Big ( (d-2) \xi^{2} + 2 \mu \xi \Big )}{d}.
+\end{equation*}
+
+\subsection{Optimization}
+We say that the clones developed above are \emph{optimal} if, whenever the fidelity of one of the clones is fixed, the fidelity of the other clone is as large as possible. Thus, for instance, if we fix the value of $F_{A}$, the value of $F_{B}$ should be as large as possible. 
+
+We will focus here on the case in which $d=2$. The general case appears to be treated in \cite{lamoureux2004asymmetric}, though the discussion there doesn't appear to be particularly edifying. 
+
+Suppose that $F_{A}$ is fixed. Our goal is to determine the values of the coefficients $\mu, \nu, \xi$ so that the fidelity of the $A$-clone is $F_{A}$ while the fidelity of the $B$ clone is as large as possible. Since $F_{A} = (1 + \eta_{A})/2$ and $F_{B} = (1 + \eta_{B})/2$, we see that it is sufficient to treat the corresponding (constrained) optimization for $\eta_{A}$ and $\eta_{B}$. Namely, we regard $\eta_{A}$ as being a fixed constant and our goal is to determine the largest possible value for $\eta_{B}$. We are thus lead to formulate the following constrained optimization problem:
+\begin{equation}
+\label{opt_prob}
+\text{maximize} \quad \eta_{B} =  2\mu \xi \quad \text{given that} \quad  2 \mu \nu = \eta_{A} \quad \text{and} \quad \mu^{2} + \nu^{2} + \xi^{2} = 1.
+\end{equation}
+Again, for clarity, we point out that $\eta_{A}$ is viewed here as being constant, meaning that the formula $2\mu \nu = \eta_{A}$ provides a constraint on the possible values of $\mu$ and $\nu$.
+
+To solve the optimization problem \eqref{opt_prob} we use Lagrange multipliers; we seek $\lambda_{1}, \lambda_{2}, \mu, \nu, \xi$ satisfying
+\begin{align}
+\nabla \eta_{B} &= \lambda_{1} \nabla g_{1}(\mu, \nu, \xi) + \lambda_{2} \nabla g_{2}(\mu, \nu, \xi) \label{grad_cond}\\
+g_{1}(\mu, \nu, \xi) &= 0 \label{g1zero}\\
+g_{2}(\mu, \nu, \xi) &= 0 \label{g2zero}
+\end{align}
+where
+\begin{equation*}
+g_{1}(\mu, \nu, \xi) = 2 \mu \nu - \eta_{A} \qquad \text{and} \qquad g_{2}(\mu, \nu, \xi) = \mu^{2} + \nu^{2} + \xi^{2} - 1.
+\end{equation*}
+Calculating the gradients and writing equation \eqref{grad_cond} in components leaves us to solve the following system of (nonlinear) equations:
+\begin{align}
+\xi & = \lambda_{1} \nu + \lambda_{2} \mu \label{systemeq1} \\
+0 &= \lambda_{1} \mu + \lambda_{2} \nu \label{systemeq2} \\
+\mu &= \lambda_{2} \xi \label{systemeq3} \\
+2 \mu \nu &= \eta_{A} \label{systemeq4}\\
+\mu^{2} + \nu^{2} + \xi^{2} &= 1 \label{systemeq5}.
+\end{align}
+We substitute \eqref{systemeq3} into \eqref{systemeq2} and cancel a factor of $\lambda_{2}$ to find that $\nu = -\lambda_{1} \xi$. (Note that if $\lambda_{2} = 0$, then $\mu = 0$, whence $\eta_{A} = 0$.) Inserting these new relationships into \eqref{systemeq1} we find that $\lambda_{2}^{2} - \lambda_{1}^{2} = 1$. (Here we have canceled a factor of $\xi$; if $\xi = 0$ we find that we must have $\eta_{A} = 0$.) Further, using \eqref{systemeq5}, we obtain
+\begin{equation}
+\label{opt_eq_1}
+\lambda_{2}^{2} \xi^{2} + \lambda_{1}^{2} \xi + \xi^{2} = 1.
+\end{equation}
+Using the identity $\lambda_{2}^{2} - \lambda_{1}^{2} = 1$ and solving \eqref{opt_eq_1} for $\xi$ yields
+\begin{equation*}
+\xi = \pm \frac{1}{\sqrt{2} \lambda_{2}}.
+\end{equation*}
+Recalling that $\mu = \lambda_{2} \xi$, we thus have
+\begin{equation*}
+\mu = \pm \frac{1}{\sqrt{2}}. 
+\end{equation*}
+As $2 \mu \nu = \eta_{A}$ (which we recall is a constant specified in advance) we have
+\begin{equation*}
+\nu = \pm \frac{1}{\sqrt{2}} \eta_{A}.
+\end{equation*}
+Finally we return to the normalization condition \eqref{systemeq5} to see that
+\begin{equation*}
+\frac{1}{2} + \frac{1}{2} \eta_{A}^{2} + \xi^{2} = 1.
+\end{equation*}
+Solving for $\xi$ yields
+\begin{equation*}
+\xi = \pm \sqrt{\frac{1 - \eta_{A}^{2}}{2}}.
+\end{equation*}
+These calculations indicate that the optimal values of $\eta_{B}$ are given by
+\begin{equation*}
+\eta_{B} = 2 \mu \xi = \pm \sqrt{1 - \eta_{A}^{2}}.
+\end{equation*}
+In particular, we see that for the optimal phase-covariante clones, the shrinking factors $\eta_{A}$, $\eta_{B}$ satisfy the circle relation
+\begin{equation*}
+\eta_{A}^{2} + \eta_{B}^{2} = 1.
+\end{equation*}
+
+\subsubsection{The Symmetric Case} In the case where the clones are symmetric, we find that $\eta_{A} = \eta_{B} = 1/\sqrt{2}$. In this case we find that the fidelities are given by
+\begin{equation*}
+F_{A} = F_{B} = \frac{1 + \frac{1}{\sqrt{2}}}{2} = \frac{1}{2} + \frac{1}{2\sqrt{2}}.
+\end{equation*}
+This agrees with previous calculations for the case of the symmetric phase-covariant cloning machines given in \cite{fan2001quantum}.
+
+
+
+\section{Separability}
+The chief objective of RSG in \cite{REZAKHANI2005278} is to show that the output states of the $1 \to 2$ phase-covariant cloner are separable in the optimal cases. This means that if we choose our cloner to be optimal, then the output state $\rho_{AB}^{(\out)}$ (where we compute the partial trace over the ancilla) is separable.
+
+A state (described by a density operator) $\rho$ defined on a composite system whose state space is given by $\mathcal{H}_{A} \otimes \mathcal{H}_{B}$ is said to be separable if it can be written as
+\begin{equation}
+\label{separable_state_def}
+\rho = \sum_{i =1}^{k} c_{i} \rho_{i}^{A} \otimes \rho_{i}^{B}
+\end{equation}
+where $c_{i} \in \C$ and $\rho_{i}^{A}, \rho_{i}^{B}$ are density operators for the $A$ and $B$ systems, respectively. (Note that $\rho_{i}^{A} \neq \rho_{i}^{B}$ in general.) The decomposition \eqref{separable_state_def} is referred to as the Schmidt decomposition of the state $\rho$. It is, in general, a very difficult problem to determine if a state is separable or entangled. There is a criterion developed in Peres \cite{peres1996separability} and in Horodecki, Horodecki, and Horodecki in \cite{HORODECKI19961} called the positive partial trace condition. This is the condition that RSG use to determine the separability of states in their paper. Unfortunately, the positive partial trace is only sufficient for this purpose in the case of qubits (where $d=2$), so RSG can only guarantee the separability of the outputs in the qubit case.
+
+\medskip
+
+\noindent{\textbf{Open Problem.}} It appears that the seprability of output states in the case of optimal phase-covariant clones is unknown in high dimensions ($d > 2$).
+
+\medskip
+
+\subsection{Recent results on separability} 
+There are some more recent results on separability. In particular, \cite{Gharahi2019FinestructureCO} appears to present a complete classification of entanglement states in $d$-dimensional systems. The tools that are involved are largely algebro-geometric in nature.
+
+\newpage
+
+\begin{center}
+\textbf{Partial Trace Calculations}
+\end{center}
+
+\medskip
+
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Term} & $\tr_{BX}$ & $\tr_{AX}$\\
+\hline
+$\displaystyle \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \ket{iii}\bra{jjj}$ & $\displaystyle \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i}$ & $\displaystyle \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i}$\\
+\hline
+$\displaystyle \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \ket{iii}\bra{jll}$ &
+$\displaystyle \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i} \bra{j}$ &
+$0$\\
+\hline
+$\displaystyle \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \ket{iii} \bra{ljl}$ &
+$\displaystyle 0$ &
+$\displaystyle \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i}\bra{j}$\\
+\hline
+$\displaystyle \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \ket{ikk}\bra{jjj}$ &
+$\displaystyle \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i}\bra{j}$ & $0$\\
+\hline
+$\displaystyle \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \ket{ikk}\bra{jll}$ &
+$\displaystyle (d-1) \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i}\bra{i}$ &
+$\displaystyle 1 - \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i} \bra{i}$\\
+   &  $\displaystyle + (d-2) \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i}\bra{j}$  & \\
+\hline
+$\displaystyle \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \ket{ikk}\bra{ljl}$ &
+$0$ &
+$0$ \\
+\hline
+$\displaystyle \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \ket{kik}\bra{jjj}$ &
+$0$ &
+$\displaystyle \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i}\bra{j}$\\
+\hline
+$\displaystyle \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \ket{kik}\bra{jll}$ &
+$0$ &
+$0$ \\
+\hline
+$\displaystyle \sum_{i=0}^{d-1} \sum_{j=0}^{d-1} \alpha_{i} \alpha_{j}^{*} \sum_{\substack{0 \leq k \leq d-1\\ k \neq i}} \sum_{\substack{0 \leq l \leq d-1\\ l \neq j}} \ket{kik}\bra{ljl}$ &
+$\displaystyle 1 - \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i}\bra{i}$ &
+$\displaystyle (d-1) \sum_{i=0}^{d-1} \vert \alpha_{i} \vert^{2} \ket{i}\bra{i}$\\
+    &  & $+ (d-2) \sum_{i=0}^{d-1} \sum_{\substack{0 \leq j \leq d-1\\ j \neq i}} \alpha_{i} \alpha_{j}^{*} \ket{i}\bra{j}$ \\
+\hline
+\end{tabular}
+
+
+
+
+% References
+\bibliographystyle{plain}
+\bibliography{reflist}
+
+\end{document}
