@@ -13,6 +13,9 @@
 \usepackage{appendix}
 \usepackage{mathtools}
 \usepackage{braket}
+\usepackage{tikz}
+\usetikzlibrary{quantikz}
+
 
 % Theorem statements that will be italicized.
 % Adding a * after \newtheorem will make it so that these aren't numbered.
@@ -546,6 +549,7 @@ F_{B} = (d-2) \xi^{2} + 2 \mu \xi + \nu^{2}.
 
 \section{Phase-Covariant Cloning}
 
+
 In this section we introduce a cloning machine of the form \eqref{universal_asymmetric} which acts on a restricted class of qudits, namely those that lie in the equatorial plane:
 \begin{equation}
 \ket{\psi} = \frac{1}{\sqrt{d}} \sum_{k=0}^{d-1} e^{i\phi_{k}} \ket{k},
@@ -566,7 +570,7 @@ This means that the fidelity of the clones satisfy
 F_{A} = \frac{1 + (d-1)\Big ( (d-2) \xi^{2} + 2 \mu \xi \Big )}{d} \qquad \text{and} \qquad F_{B} = \frac{ 1 + (d-1)\Big ( (d-2) \xi^{2} + 2 \mu \xi \Big )}{d}.
 \end{equation*}
 
-\subsection{Optimization}
+\subsection{Optimization} \label{optimization}
 We say that the clones developed above are \emph{optimal} if, whenever the fidelity of one of the clones is fixed, the fidelity of the other clone is as large as possible. Thus, for instance, if we fix the value of $F_{A}$, the value of $F_{B}$ should be as large as possible. 
 
 We will focus here on the case in which $d=2$. The general case appears to be treated in \cite{lamoureux2004asymmetric}, though the discussion there doesn't appear to be particularly edifying. 
@@ -636,7 +640,262 @@ F_{A} = F_{B} = \frac{1 + \frac{1}{\sqrt{2}}}{2} = \frac{1}{2} + \frac{1}{2\sqrt
 \end{equation*}
 This agrees with previous calculations for the case of the symmetric phase-covariant cloning machines given in \cite{fan2001quantum}.
 
+\section{Implementation}
+In this section we will focus on a circuit that can be used to implement phase-covariant cloning on equatorial qubits as described above. The circuit that we consider for this implementation is as follows:
 
+\begin{center}
+\begin{quantikz}
+\lstick{$\ket{\psi}^{\text{(in)}}$} & \qw & \qw & \qw & \qw & \qw & \ctrl{1} & \ctrl{2} & \targ & \qw & \targ & \qw & \qw \rstick[wires = 3]{$\ket{\psi}^{\text{(out)}}$}\\
+\lstick{$\ket{0}$} & \gate{R_{y}(2\theta_{1})} & \ctrl{1} & \qw &\targ & \qw  & \gate{R_{y}(2 \theta_{3})} & \targ & \qw & \qw & \ctrl{-1} & \qw & \qw \\
+\lstick{$\ket{0}$} & \qw & \targ & \qw & \gate{R_{y}(2 \theta_{2})} & \ctrl{-1} & \qw & \qw & \targ & \qw & \qw & \ctrl{-2} & \qw \\
+\end{quantikz}
+\end{center}
+
+This circuit was originally developed in \cite{PhysRevA.56.3446}. Note that the $R_{y}$ gate has the matrix representation
+\begin{equation*}
+R_{y}(\theta) = \left ( \begin{matrix} 
+\cos \left ( \frac{\theta}{2} \right ) & -\sin \left ( \frac{\theta}{2} \right )\\
+\sin \left ( \frac{\theta}{2} \right ) & \cos\left ( \frac{\theta}{2} \right )
+\end{matrix} \right ),
+\end{equation*}
+meaning that by doubling the angles entered into the gate we remove the denominators in the trigonometric functions that are the entries of the matrix.
+
+Our goal in this section is to calculate the output for this circuit when $\ket{\psi}^{(\textnormal{in)}} = \frac{1}{\sqrt{2}} \Big ( \ket{0} + e^{i\phi} \ket{1} \Big )$ and to select angles $\theta_{1}, \theta_{2}, \theta_{3}$ that realize the optimal cloning described in the preceding section.
+
+\subsection{Determining Circuit Output}
+To simplify the exposition we will focus on the circuit output for the qubits $\ket{0}$ and $\ket{1}$ and then use linearity to express the output for the input state $\ket{\psi}^{(\textnormal{in})}$.
+
+\subsubsection{Input State $\ket{0}$}
+In the case when the input state is $\ket{0}$ the initial state of the (composite) system is $\ket{000}$. Upon application of the first rotation (on the $1$-qubit) our system is of the form
+\begin{equation*}
+\cos(\theta_{1}) \ket{000} + \sin(\theta_{1}) \ket{010}.
+\end{equation*}
+Next we apply our first CNOT gate to get
+\begin{equation*}
+\cos(\theta_{1}) \ket{000} + \sin(\theta_{1}) \ket{011}.
+\end{equation*}
+The rotation through $2\theta_{2}$ in the $2$-qubit yields
+\begin{align*}
+&\cos(\theta_{1}) \Big ( \cos(\theta_{2}) \ket{000} + \sin(\theta_{2}) \ket{001} \Big ) + \sin(\theta_{1}) \Big ( -\sin(\theta_{2}) \ket{010} + \cos(\theta_{2}) \ket{011} \Big )\\
+= & \cos(\theta_{1}) \cos(\theta_{2}) \ket{000} + \cos(\theta_{1}) \sin(\theta_{2}) \ket{001} - \sin(\theta_{1}) \sin(\theta_{2}) \ket{010} + \sin(\theta_{1}) \cos(\theta_{2} \ket{011}.
+\end{align*}
+The second CNOT gate applied to this state leaves us with
+\begin{equation*}
+\cos(\theta_{1}) \cos(\theta_{2}) \ket{000} + \cos(\theta_{1}) \sin(\theta_{2}) \ket{011} - \sin(\theta_{1}) \sin(\theta_{2}) \ket{010} + \sin(\theta_{1}) \cos(\theta_{2} \ket{001}.
+\end{equation*}
+The final rotation (through an angle of $2\theta_{3}$ in the $1$-qubit) gives
+\begin{align*}
+&\cos(\theta_{1}) \cos(\theta_{2}) \Big ( \cos(\theta_{3}) \ket{000} + \sin(\theta_{3}) \ket{010} \Big ) + \cos(\theta_{1}) \sin(\theta_{2}) \Big ( -\sin(\theta_{3}) \ket{001} + \cos(\theta_{3}) \ket{011} \Big )\\
+& - \sin(\theta_{1}) \sin(\theta_{2}) \Big ( -\sin(\theta_{3}) \ket{000} + \cos(\theta_{3}) \ket{010} \Big ) + \sin(\theta_{1}) \cos(\theta_{2}) \Big ( \cos(\theta_{3}) \ket{001} + \sin(\theta_{3}) \ket{011} \Big )\\
+= & \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) \ket{000} + \cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \ket{010}
+- \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \ket{001} + \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \ket{011}\\
+& + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \ket{000} - \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \ket{010} + \sin(\theta_{1}) \cos(\theta_{2} \cos(\theta_{3}) \ket{001} + \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \ket{011}\\
+= & \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{000}\\
+& + \Big (\cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big ) \ket{010}\\
+& + \Big ( \sin(\theta_{1}) \cos(\theta_{2} \cos(\theta_{3}) - \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{001}\\
+& + \Big ( \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{011}.
+\end{align*}
+This concludes the preparatory phase of the circuit. We point out that the input $\ket{\psi}^{(\textnormal{in})}$ has not yet been used in our calculations. That is, only the $1$- and $2$- qubits have been affected. This fact will be inportant when we consider the case when the input is $\ket{1}$.
+
+Turning to the remainder of the circuit we have four CNOT gates that we must now pass through. Since the $0$-qubit is in the state $\ket{0}$, the first two CNOT gates do not affect the state. The third CNOT gate (with the control on the $1$-qubit) yields
+\begin{align*}
+& \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{000}\\
+& + \Big (\cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big ) \ket{110}\\
+& + \Big ( \sin(\theta_{1}) \cos(\theta_{2} \cos(\theta_{3}) - \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{001}\\
+& + \Big ( \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{111},
+\end{align*}
+and the final CNOT gate (with the control on the $2$-qubit) gives
+\begin{align*}
+\ket{\psi}^{(\out)} &=  \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{000}\\
+& + \Big (\cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big ) \ket{110}\\
+& + \Big ( \sin(\theta_{1}) \cos(\theta_{2} \cos(\theta_{3}) - \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{101}\\
+& + \Big ( \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{011},
+\end{align*}
+
+\subsubsection{Input State $\ket{1}$}
+In this case the initial state of the system is $\ket{100}$. As pointed out above, the preparatory phase of the circuit does not affect the value in the first qubit, so at the end of this phase our system is in the state
+\begin{align*}
+& \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{100}\\
+& + \Big (\cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big ) \ket{110}\\
+& + \Big ( \sin(\theta_{1}) \cos(\theta_{2} \cos(\theta_{3}) - \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{101}\\
+& + \Big ( \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{111}.
+\end{align*}
+We now consider the four CNOT gates at the end of the circuit, all of which must now be considered. The first CNOT gate yields
+\begin{align*}
+& \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{110}\\
+& + \Big (\cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big ) \ket{100}\\
+& + \Big ( \sin(\theta_{1}) \cos(\theta_{2} \cos(\theta_{3}) - \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{111}\\
+& + \Big ( \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{101}.
+\end{align*}
+The second CNOT affects the value in the $2$-qubit, leaving us with
+\begin{align*}
+& \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{111}\\
+& + \Big (\cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big ) \ket{101}\\
+& + \Big ( \sin(\theta_{1}) \cos(\theta_{2} \cos(\theta_{3}) - \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{110}\\
+& + \Big ( \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{100}.
+\end{align*}
+The third CNOT gate has its control on the $1$-qubit and target on the $0$-qubit:
+\begin{align*}
+& \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{011}\\
+& + \Big (\cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big ) \ket{101}\\
+& + \Big ( \sin(\theta_{1}) \cos(\theta_{2} \cos(\theta_{3}) - \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{010}\\
+& + \Big ( \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{100}.
+\end{align*}
+Applying the final CNOT gate yields
+\begin{align*}
+\ket{\psi}^{(\out)} &= \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{111}\\
+& + \Big (\cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big ) \ket{001}\\
+& + \Big ( \sin(\theta_{1}) \cos(\theta_{2} \cos(\theta_{3}) - \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{010}\\
+& + \Big ( \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{100}.
+\end{align*}
+
+\subsubsection{Output for Equatorial Qubits} We can now use linearity to see that if 
+\begin{equation*}
+\ket{\psi}^{(\textnormal{in})} = \frac{1}{\sqrt{2}} \Big ( \ket{0} + e^{i\phi} \ket{1} \Big ),
+\end{equation*}
+then
+\begin{equation}
+\label{equatorial_output}
+\begin{aligned}
+\ket{\psi}^{(\out)} &= \frac{1}{\sqrt{2}} \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{000}\\
+& + \frac{1}{\sqrt{2}} \Big (\cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big ) \ket{110}\\
+& + \frac{1}{\sqrt{2}} \Big ( \sin(\theta_{1}) \cos(\theta_{2} \cos(\theta_{3}) - \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{101}\\
+& + \frac{1}{\sqrt{2}}\Big ( \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{011}\\
+& + \frac{e^{i\phi}}{\sqrt{2}} \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{111}\\
+& + \frac{e^{i\phi}}{\sqrt{2}} \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big ) \ket{001}\\
+& + \frac{e^{i\phi}}{\sqrt{2}} \Big ( \sin(\theta_{1}) \cos(\theta_{2} \cos(\theta_{3}) - \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{010}\\
+& + \frac{e^{i\phi}}{\sqrt{2}} \Big ( \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big ) \ket{100}.
+\end{aligned}
+\end{equation}
+
+\subsection{Identifying Coefficients}
+We recall that the asymmetric phase-covariant cloning machine for equatorial qubits (meaning that $d=2$) has the form
+\begin{equation*}
+\begin{aligned}
+\ket{0} &\mapsto \mu \ket{000} + \nu \ket{011} + \xi \ket{101}\\
+\ket{1} &\mapsto \mu \ket{111} + \nu \ket{100} + \xi \ket{010}.
+\end{aligned}
+\end{equation*}
+By comparint coefficients with those from \eqref{equatorial_output} we see that
+\begin{equation}
+\label{coeffs_angles}
+\begin{aligned}
+\mu &= \cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3})\\
+\nu &= \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3})\\
+\xi &= \sin(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) - \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}),
+\end{aligned}
+\end{equation}
+together with the requirement that
+\begin{equation}
+\label{zero_condition}
+ \cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) = 0.
+\end{equation}
+
+\subsection{Parameter Selection}
+We now turn to the problem of determining values for $\theta_{1}, \theta_{2}, \theta_{3}$ that realize the optimal cloning described in Section \ref{optimization}.
+
+To begin we recall that the factors $\eta_{A}$ and $\eta_{B}$ are given by
+\begin{equation*}
+\eta_{A} = 2 \mu \nu \qquad \text{and} \qquad \eta_{B} = 2 \mu \xi
+\end{equation*}
+and satisfy the circle identity
+\begin{equation*}
+\eta_{A}^{2} + \eta_{B}^{2} = 1.
+\end{equation*}
+Using the identifications \eqref{coeffs_angles} we are able to express $\eta_{A}$ and $\eta_{B}$ in terms of $\theta_{1}, \theta_{2},$ and $\theta_{3}$. Indeed,
+\begin{align*}
+\eta_{A} &= 2 \mu \nu\\
+&= 2 \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \Big ( \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big )\\
+&= 2 \Big ( \cos^{2}(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{2}) \cos^{2}(\theta_{3}) + \sin(\theta_{1}) \cos(\theta_{1}) \cos^{2}(\theta_{2}) \sin(\theta_{3})\cos(\theta_{3}) \\
+& \quad + \sin(\theta_{1}) \cos(\theta_{1}) \sin^{2}(\theta_{2}) \sin(\theta_{3}) \cos(\theta_{3}) + \sin^{2}(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{2}) \sin^{2}(\theta_{3}) \Big )
+\end{align*}
+Observe that we can use the identity \eqref{zero_condition} to rewrite the two middle terms in this expression:
+\begin{align*}
+\sin(\theta_{1}) \cos(\theta_{1}) \cos^{2}(\theta_{2}) \sin(\theta_{3})\cos(\theta_{3})
+&= \sin(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big )\\
+&=\sin(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) \Big ( \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big )\\
+&= \sin^{2}(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{2}) \cos^{2}(\theta_{3}),
+\intertext{and}
+\sin(\theta_{1}) \cos(\theta_{1}) \sin^{2}(\theta_{2}) \sin(\theta_{3}) \cos(\theta_{3}) &=
+\cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ( \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big )\\
+&= \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big )\\
+&= \cos^{2}(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{2}) \sin^{2}(\theta_{3}).
+\end{align*}
+Returning to our calculation of $\eta_{A}$, we have
+\begin{align*}
+\eta_{A} &= 2 \Big ( \cos^{2}(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{2}) \cos^{2}(\theta_{3}) + \sin^{2}(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{2}) \cos^{2}(\theta_{3})\\
+& \qquad + \cos^{2}(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{2}) \sin^{2}(\theta_{3}) + \sin^{2}(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{2}) \sin^{2}(\theta_{3}) \Big )\\
+&= 2 \Big ( \sin(\theta_{2}) \cos(\theta_{2}) \cos^{2}(\theta_{3}) + \sin(\theta_{2}) \cos(\theta_{2}) \sin^{2}(\theta_{3}) \Big )\\
+&= 2 \sin(\theta_{2}) \cos(\theta_{2})\\
+&= \sin(2 \theta_{2}).
+\end{align*}
+
+In the case of the $\eta_{B}$ factor we proceed similarly. We calculate
+\begin{align*}
+\eta_{B} &= 2 \mu \xi\\
+&= 2 \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big )
+\Big ( \sin(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) - \cos(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) \Big ) \\
+&= 2 \Big ( \sin(\theta_{1}) \cos(\theta_{1}) \cos^{2}(\theta_{2}) \cos^{2}(\theta_{3}) - \cos^{2}(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{2}) \sin(\theta_{3}) \cos(\theta_{3}) \\
+& \qquad + \sin^{2}(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{2}) \sin(\theta_{3}) \cos(\theta_{3}) - \sin(\theta_{1}) \cos(\theta_{1}) \sin^{2}(\theta_{2}) \sin^{2}(\theta_{3}) \Big )
+\end{align*}
+Using \eqref{zero_condition} we simplify the second and third terms in our sum, as we did in the case of $\eta_{A}$ above:
+\begin{align*}
+\cos^{2}(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{2}) \sin(\theta_{3}) \cos(\theta_{3}) &=
+\cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big )\\
+&= \cos(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big ( \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big ) \\
+&= \sin(\theta_{1}) \cos(\theta_{1}) \sin^{2}(\theta_{2}) \cos^{2}(\theta_{3}),
+\intertext{and}
+\sin^{2}(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{2}) \sin(\theta_{3}) \cos(\theta_{3}) &=
+\sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big ( \sin(\theta_{1}) \sin(\theta_{2}) \cos(\theta_{3}) \Big )\\
+&= \sin(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big ( \cos(\theta_{1}) \cos(\theta_{2}) \sin(\theta_{3}) \Big )\\
+&= \sin(\theta_{1}) \cos(\theta_{1}) \cos^{2}(\theta_{2}) \sin^{2}(\theta_{3})\\
+\end{align*}
+Thus
+\begin{align*}
+\eta_{B} &= 2 \Big ( \sin(\theta_{1}) \cos(\theta_{1}) \cos^{2}(\theta_{2}) \cos^{2}(\theta_{3}) - \sin(\theta_{1}) \cos(\theta_{1}) \sin^{2}(\theta_{2}) \cos^{2}(\theta_{3}) \\
+& \qquad + \sin(\theta_{1}) \cos(\theta_{1}) \cos^{2}(\theta_{2}) \sin^{2}(\theta_{3}) - \sin(\theta_{1}) \cos(\theta_{1}) \sin^{2}(\theta_{2}) \sin^{2}(\theta_{3}) \Big )\\ 
+&= 2 \Big ( \sin(\theta_{1}) \cos(\theta_{1}) \cos^{2}(\theta_{2}) -  \sin(\theta_{1}) \cos(\theta_{1}) \sin^{2}(\theta_{2}) \Big )\\
+&= \sin(2 \theta_{1}) \cos(2 \theta_{2}).
+\end{align*}
+
+In case the cloning transformation is optimal, $\eta_{A}$ and $\eta_{B}$ satisfy the circle relation
+\begin{equation*}
+\eta_{A}^{2} + \eta_{B}^{2} = 1.
+\end{equation*}
+In terms of our angles $\theta_{1}, \theta_{2}, \theta_{3}$, this now reads
+\begin{equation*}
+\sin^{2}(2 \theta_{2}) + \sin^{2}(2 \theta_{1}) \cos^{2}(2 \theta_{2}) = 1.
+\end{equation*}
+In light of the standard Pythagorean identity, $\cos^{2}(2 \theta_{2}) + \sin^{2}(2 \theta_{2}) = 1$, we find that
+\begin{equation*}
+\sin^{2}(2 \theta_{1}) = 1 \qquad \text{or} \qquad \cos^{2}(2 \theta_{2}) = 0. 
+\end{equation*}
+Notice that if $\cos(2 \theta_{2}) = 0$, then $\eta_{B} = 0$ and $\eta_{A} = 1$. While this presents itself as a possibility, it isn't a particularly interesting one and we will not dwell on it. Of greater interest is the other restriction which requires $\sin(2\theta_{1}) = \pm 1$.
+\begin{itemize}
+\item If $\sin(2 \theta_{1}) = 1$, then $\theta_{1} = \pi/4$ (up to integer multiples of $\pi$). Returning this to \eqref{zero_condition} yields
+\begin{equation*}
+\cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{2}) \cos(\theta_{3}) = 0.
+\end{equation*}
+That is, we require that $\sin(\theta_{3} - \theta_{2}) = 0$, meaning that $\theta_{3} - \theta_{2} = k\pi$ for some $k \in \Z$. In what follows we will take $k = 0$, yielding $\theta_{2} = \theta_{3}$. This choice is also consistent with the requirement that
+\begin{equation*}
+\mu = \cos(\theta_{1}) \cos(\theta_{2}) \cos(\theta_{3}) + \sin(\theta_{1}) \sin(\theta_{2}) \sin(\theta_{3}) = \frac{1}{\sqrt{2}},
+\end{equation*}
+which emerges as a requirement of the optimal transformation.
+\item If $\sin(2\theta_{1}) = -1$, then $\theta_{1} = 3\pi/4$ (again up to an integer multiple of $\pi$). Returning this to \eqref{zero_condition} leaves us with
+\begin{equation*}
+-\cos(\theta_{2}) \sin(\theta_{3}) - \sin(\theta_{2}) \cos(\theta_{3}) = 0,
+\end{equation*}
+which simplifies to $\sin(\theta_{3} + \theta_{2}) = 0$, meaning that $\theta_{2} + \theta_{3} = k\pi$ for some $k \in \Z$. {\color{red}{I haven't thought much about this case. It is still consistent with the requirement that $\mu = 1/\sqrt{2}$.}}
+\end{itemize}
+
+\medskip
+
+\noindent{\textbf{Summary.}} The circuit presented at the beginning of this section implements a phase-covariant cloning machine if the angles $\theta_{1}, \theta_{2}, \theta_{3}$ are selected so that
+\begin{equation*}
+\theta_{1} = \frac{\pi}{4}, \qquad \theta_{2} = \theta_{3}.
+\end{equation*}
+
+{\color{red}{There is a requirement that $\eta_{A}, \eta_{B} \in [0,1]$, which may restrict our choices, but I've not thought further about this.}}
 
 \section{Separability}
 The chief objective of RSG in \cite{REZAKHANI2005278} is to show that the output states of the $1 \to 2$ phase-covariant cloner are separable in the optimal cases. This means that if we choose our cloner to be optimal, then the output state $\rho_{AB}^{(\out)}$ (where we compute the partial trace over the ancilla) is separable.
@@ -651,6 +910,9 @@ where $c_{i} \in \C$ and $\rho_{i}^{A}, \rho_{i}^{B}$ are density operators for 
 \medskip
 
 \noindent{\textbf{Open Problem.}} It appears that the seprability of output states in the case of optimal phase-covariant clones is unknown in high dimensions ($d > 2$).
+
+
+
 
 \medskip
 
