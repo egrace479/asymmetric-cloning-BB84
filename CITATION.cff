@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using these metadata and also cite our paper.
+title: My Research Software
+abstract: Though the BB84 protocol has provable security over a noiseless quantum channel, the security is not proven over current noisy technology. The level of tolerable error on such systems is still unclear, as is how much information about a raw key may be obtained by an eavesdropper. We develop a reproducible test to determine the security--or lack thereof--of the protocol in practice. This enables us to obtain an experimental estimate of the information that can be obtained using asymmetric phase-covariant cloning to eavesdrop on the BB84 protocol.
+authors:
+  - family-names: "Pigott"
+    given-names: "Brian"
+    orcid: "https://orcid.org/0000-0002-5658-3618"
+  - family-names: "Campolongo"
+    given-names: "Elizabeth G."
+    orcid: "https://orcid.org/0000-0003-0846-2413"
+  - family-names: "Routray"
+    given-names: "Hardik"
+    orcid: "https://orcid.org/0000-0002-9694-4625"
+  - name: "Asymmetric Phase-Covariant Cloning to Eavesdrop on BB84"
+version: 1.0.0
+date-released: "2024-10-21"
+identifiers:
+  - description: "The commit with the code as used in experiments reported in arXiv paper 10.48550/arXiv.2409.16284"
+    type: url
+    value: ""
+license: mit
+repository-code: "https://github.com/egrace479/asymmetric-cloning-BB84"
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Pigott"
+      given-names: "Brian"
+    - family-names: "Campolongo"
+      given-names: "Elizabeth G."
+    - family-names: "Routray"
+      given-names: "Hardik"
+  title: "Eavesdropping on the BB84 Protocol using Phase-Covariant Cloning: Experimental Results"
+  year: 2024
+  journal: arXiv
+  doi: "10.48550/arXiv.2409.16284"
