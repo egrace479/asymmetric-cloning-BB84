@@ -18,7 +18,7 @@ date-released: "2024-10-21"
 identifiers:
   - description: "The commit with the code as used in experiments reported in arXiv paper 10.48550/arXiv.2409.16284"
     type: url
-    value: ""
+    value: "https://github.com/egrace479/asymmetric-cloning-BB84/tree/176b2304b3aabb84287215260045f0fb5edda93c"
 license: mit
 repository-code: "https://github.com/egrace479/asymmetric-cloning-BB84"
 preferred-citation:
